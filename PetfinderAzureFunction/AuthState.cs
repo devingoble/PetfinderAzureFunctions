@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 namespace PetfinderAzureFunction
 {
     [JsonObject(MemberSerialization.OptIn)]
-    public class AuthState
+    public class AuthState : IAuthState
     {
-        [JsonProperty("value")]
+        [JsonProperty("accessToken")]
         public string AccessToken { get; set; }
 
         public void Set(string token) => this.AccessToken = token;
