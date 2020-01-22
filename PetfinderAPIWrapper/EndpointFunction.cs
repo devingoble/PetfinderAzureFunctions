@@ -3,48 +3,62 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.Azure.KeyVault;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace PetfinderAPIWrapper
 {
     public class EndpointFunction
     {
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly IKeyVaultClient _keyVaultClient;
+        private readonly APIOptions _options;
 
-        public EndpointFunction(IHttpClientFactory clientFactory, IKeyVaultClient keyVaultClient)
+        public EndpointFunction(IHttpClientFactory clientFactory, IOptions<APIOptions> options)
         {
             _httpClientFactory = clientFactory;
-            _keyVaultClient = keyVaultClient;
+            _options = options.Value;
         }
 
         [FunctionName("Endpoint_HttpStart")]
         public async Task<HttpResponseMessage> HttpStart(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get")]HttpRequestMessage req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "pets")]HttpRequestMessage req,
             [DurableClient] IDurableEntityClient client,
             ILogger log)
         {
+            var accessToken = await GetAuthToken(client);
+
+
+
+
+            return new HttpResponseMessage(System.Net.HttpStatusCode.OK);
+        }
+
+        private async Task<AccessTokenWrapper> GetAuthToken(IDurableEntityClient client)
+        {
             var entityId = new EntityId(nameof(AuthStateEntity), "petfinderauth");
-            var response = await client.ReadEntityStateAsync<IAuthStateEntity>(entityId);
+            var response = await client.ReadEntityStateAsync<AuthStateEntity>(entityId);
             AccessTokenWrapper accessToken;
 
-            if (!response.EntityExists)
-            {
-                var token = await Authenticate();
-                response.EntityState.Set(token);
-                accessToken = token;
-            }
-            else
+            if (response.EntityExists)
             {
                 accessToken = await response.EntityState.Get();
             }
+            else
+            {
+                accessToken = await Authenticate();
+            }
 
-            return new HttpResponseMessage(System.Net.HttpStatusCode.OK);
+            if (accessToken.ExpiresAtTime.AddMinutes(-10) <= DateTime.Now)
+            {
+                accessToken = await Authenticate();
+            }
+
+            await client.SignalEntityAsync<IAuthStateEntity>(entityId, proxy => proxy.Set(accessToken));
+
+            return accessToken;
         }
 
         private async Task<AccessTokenWrapper> Authenticate()
@@ -54,13 +68,17 @@ namespace PetfinderAPIWrapper
             var requestData = new List<KeyValuePair<string, string>>();
             requestData.Add(new KeyValuePair<string, string>("grant_type", "client_credentials"));
 
+            requestData.Add(new KeyValuePair<string, string>("client_id", _options.PetfinderAPIKey));
+            requestData.Add(new KeyValuePair<string, string>("client_secret", _options.PetfinderAPISecret));
+
             var requestBody = new FormUrlEncodedContent(requestData);
 
-            var request = await client.PostAsync(Environment.GetEnvironmentVariable("Values:PetFinder-API-Url"), requestBody);
+            var request = await client.PostAsync(_options.PetfinderAPIAuthUrl, requestBody);
             var response = await request.Content.ReadAsStringAsync();
 
             return JsonSerializer.Deserialize<AccessTokenWrapper>(response);
-
         }
+
+        private async Task<>
     }
 }

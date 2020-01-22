@@ -4,8 +4,6 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
-using Microsoft.Azure.KeyVault;
-using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Http;
@@ -24,13 +22,6 @@ namespace PetfinderAPIWrapper
                 {
                     configuration.Bind(settings);
                 });
-
-            builder.Services.AddSingleton<IKeyVaultClient>((svc) =>
-            {
-                var azureServiceTokenProvider = new AzureServiceTokenProvider();
-                var kv = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(azureServiceTokenProvider.KeyVaultTokenCallback));
-                return kv;
-            });
 
             builder.Services.AddHttpClient("petfinderapiauth", client =>
             {

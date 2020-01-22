@@ -6,9 +6,9 @@ namespace PetfinderAPIWrapper
 {
     public class APIOptions
     {
-        public string PetfinderAPIKey { get; set; }
-        public string PetfinderAPISecret { get; set; }
-        public string PetfinderAPIAuthUrl { get; set; }
-        public string PetfinderAPIBaseUrl { get; set; }
+        public string PetfinderAPIKey { get; set; } = "";
+        public string PetfinderAPISecret { get; set; } = "";
+        public string PetfinderAPIAuthUrl { get; set; } = "";
+        public string PetfinderAPIBaseUrl { get; set; } = "";
     }
 }
