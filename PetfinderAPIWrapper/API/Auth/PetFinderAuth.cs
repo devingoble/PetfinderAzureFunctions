@@ -14,9 +14,9 @@ namespace PetfinderAPIWrapper.API.Auth
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly ApiOptions _options;
-        private readonly ILogger _logger;
+        private readonly ILogger<PetfinderAuth> _logger;
 
-        public PetfinderAuth(IHttpClientFactory httpClientFactory, IOptions<ApiOptions> options, ILogger log)
+        public PetfinderAuth(IHttpClientFactory httpClientFactory, IOptions<ApiOptions> options, ILogger<PetfinderAuth> log)
         {
             _httpClientFactory = httpClientFactory;
             _options = options.Value;

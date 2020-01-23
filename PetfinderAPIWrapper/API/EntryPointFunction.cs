@@ -21,9 +21,9 @@ namespace PetfinderAPIWrapper.API
         private readonly IPetfinderAuth _petfinderAuth;
         private readonly ApiOptions _options;
         private readonly HttpClient _httpClient;
-        private readonly ILogger _logger;
+        private readonly ILogger<EntryPointFunction> _logger;
 
-        public EntryPointFunction(IHttpClientFactory httpClientFactory, IPetfinderAuth petFinderAuth, IOptions<ApiOptions> options, ILogger log)
+        public EntryPointFunction(IHttpClientFactory httpClientFactory, IPetfinderAuth petFinderAuth, IOptions<ApiOptions> options, ILogger<EntryPointFunction> log)
         {
             _petfinderAuth = petFinderAuth;
             _options = options.Value;

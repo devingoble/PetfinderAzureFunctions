@@ -39,19 +39,6 @@ namespace PetfinderAPIWrapper
             });
 
             builder.Services.AddTransient<IPetfinderAuth, PetfinderAuth>();
-
-            //builder.Services.AddHttpClient("petfinderapi", client =>
-            //{
-            //    client.DefaultRequestHeaders.Accept.Clear();
-            //    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Convert.ToBase64String(Encoding.UTF8.GetBytes(credentials)));
-
-
-            //    var requestBody = new FormUrlEncodedContent(requestData);
-            //    client.
-
-            //    client.BaseAddress = new Uri("https://api.petfinder.com/v2/");
-            //});
         }
     }
 }
