@@ -40,6 +40,8 @@ namespace PetfinderAPIWrapper.API.Auth
                 accessToken = await Authenticate();
             }
 
+            _logger.LogInformation("Access Token", new { TokenType = accessToken.TokenType, ExpiresInSeconds = accessToken.ExpiresInSeconds, ExpiresAtTime = accessToken.ExpiresAtTime });
+
             if (accessToken.ExpiresAtTime.AddMinutes(-10) <= DateTime.Now)
             {
                 accessToken = await Authenticate();
