@@ -28,14 +28,14 @@ namespace PetfinderAPIWrapper
             {
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                client.BaseAddress = new Uri("https://api.petfinder.com/v2/oauth2/token");
+                client.BaseAddress = new Uri(Environment.GetEnvironmentVariable("PetFinderAPIAuthUrl") ?? "");
             });
 
             builder.Services.AddHttpClient("petfinderapi", client =>
             {
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                client.BaseAddress = new Uri("https://api.petfinder.com/v2");
+                client.BaseAddress = new Uri(Environment.GetEnvironmentVariable("PetFinderAPIBaseUrl") ?? "");
             });
 
             builder.Services.AddTransient<IPetfinderAuth, PetfinderAuth>();

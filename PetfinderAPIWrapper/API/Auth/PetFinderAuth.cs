@@ -25,6 +25,8 @@ namespace PetfinderAPIWrapper.API.Auth
 
         public async Task<AccessTokenWrapper> GetAuthTokenAsync(IDurableEntityClient client)
         {
+            _logger.LogInformation($"Auth URL: {_options.PetfinderAPIAuthUrl}");
+
             var entityId = new EntityId(nameof(AuthStateEntity), "petfinderauth");
             var response = await client.ReadEntityStateAsync<AuthStateEntity>(entityId);
             AccessTokenWrapper accessToken;
