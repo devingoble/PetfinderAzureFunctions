@@ -4,7 +4,7 @@ using System.Text;
 
 namespace PetfinderAPIWrapper
 {
-    public class APIOptions
+    public class ApiOptions
     {
         public string PetfinderAPIKey { get; set; } = "";
         public string PetfinderAPISecret { get; set; } = "";

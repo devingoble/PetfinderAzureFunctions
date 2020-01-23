@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace PetfinderAPIWrapper
+namespace PetfinderAPIWrapper.API.Auth
 {
     public class AuthStateEntity : IAuthStateEntity
     {

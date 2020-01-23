@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Http;
 using Microsoft.Extensions.Logging;
+using PetfinderAPIWrapper.API.Auth;
 
 [assembly: FunctionsStartup(typeof(PetfinderAPIWrapper.Startup))]
 
@@ -17,7 +18,7 @@ namespace PetfinderAPIWrapper
     {
         public override void Configure(IFunctionsHostBuilder builder)
         {
-            builder.Services.AddOptions<APIOptions>()
+            builder.Services.AddOptions<ApiOptions>()
                 .Configure<IConfiguration>((settings, configuration) =>
                 {
                     configuration.Bind(settings);
@@ -29,6 +30,15 @@ namespace PetfinderAPIWrapper
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 client.BaseAddress = new Uri("https://api.petfinder.com/v2/oauth2/token");
             });
+
+            builder.Services.AddHttpClient("petfinderapi", client =>
+            {
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                client.BaseAddress = new Uri("https://api.petfinder.com/v2");
+            });
+
+            builder.Services.AddTransient<IPetfinderAuth, PetfinderAuth>();
 
             //builder.Services.AddHttpClient("petfinderapi", client =>
             //{
