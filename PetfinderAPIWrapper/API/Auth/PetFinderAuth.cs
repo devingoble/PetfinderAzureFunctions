@@ -40,6 +40,7 @@ namespace PetfinderAPIWrapper.API.Auth
             {
                 _logger.LogInformation("New authentication");
                 accessToken = await Authenticate();
+                _logger.LogInformation($"Fragment: {accessToken.AccessToken.Substring(0, 10)}");
             }
 
             _logger.LogInformation($"Access Token Expiration - Expiration Time: {accessToken.ExpiresAtTime} - Expiration Duration: {accessToken.ExpiresInSeconds}");
