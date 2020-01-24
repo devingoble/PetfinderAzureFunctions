@@ -70,6 +70,8 @@ namespace PetfinderAPIWrapper.API.Auth
             var request = await client.PostAsync(_options.PetfinderAPIAuthUrl, requestBody);
             var response = await request.Content.ReadAsStringAsync();
 
+            _logger.LogInformation("JSON Response: " + response);
+
             return JsonSerializer.Deserialize<AccessTokenWrapper>(response);
         }
 
