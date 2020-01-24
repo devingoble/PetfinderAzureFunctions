@@ -40,7 +40,6 @@ namespace PetfinderAPIWrapper.API.Auth
             {
                 _logger.LogInformation("New authentication");
                 accessToken = await Authenticate();
-                _logger.LogInformation($"Fragment: {accessToken.AccessToken.Substring(0, 10)}");
             }
 
             _logger.LogInformation($"Access Token Expiration - Expiration Time: {accessToken.ExpiresAtTime} - Expiration Duration: {accessToken.ExpiresInSeconds}");
@@ -69,8 +68,6 @@ namespace PetfinderAPIWrapper.API.Auth
 
             var request = await client.PostAsync(_options.PetfinderAPIAuthUrl, requestBody);
             var response = await request.Content.ReadAsStringAsync();
-
-            _logger.LogInformation("JSON Response: " + response);
 
             return JsonSerializer.Deserialize<AccessTokenWrapper>(response);
         }

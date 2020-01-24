@@ -40,7 +40,7 @@ namespace PetfinderAPIWrapper.API
             var accessToken = await _petfinderAuth.GetAuthTokenAsync(client);
             var uri = new Uri(Path.Join(_options.PetfinderAPIBaseUrl, passthroughRoute));
 
-            _logger.LogInformation("Making Petfinder call", uri.ToString(), uri, req, client);
+            _logger.LogInformation($"Making Petfinder call: URI: {uri.ToString()}, HttpRequestMessage: {req.RequestUri.ToString()}, Client: {client.TaskHubName}");
 
             _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {accessToken.AccessToken}");
             var pfDataMessage = await _httpClient.GetAsync(uri);
@@ -48,8 +48,6 @@ namespace PetfinderAPIWrapper.API
             if (pfDataMessage.IsSuccessStatusCode)
             {
                 var dataString = await pfDataMessage.Content.ReadAsStringAsync();
-
-                _logger.LogInformation("Petfinder reponse", dataString);
 
                 var returnContent = new ContentResult();
                 returnContent.Content = dataString;
@@ -59,7 +57,7 @@ namespace PetfinderAPIWrapper.API
                 return returnContent;
             }
 
-            _logger.LogError("Error from Petfinder", pfDataMessage);
+            _logger.LogError($"Error from Petfinder: {await pfDataMessage.Content.ReadAsStringAsync()}");
 
             var code = pfDataMessage.StatusCode == HttpStatusCode.NotFound ? HttpStatusCode.NotFound : HttpStatusCode.InternalServerError;
 
