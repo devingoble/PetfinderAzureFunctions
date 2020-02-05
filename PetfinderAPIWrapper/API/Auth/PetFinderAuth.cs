@@ -44,7 +44,7 @@ namespace PetfinderAPIWrapper.API.Auth
 
             _logger.LogInformation($"Access Token Expiration - Expiration Time: {accessToken.ExpiresAtTime} - Expiration Duration: {accessToken.ExpiresInSeconds}");
 
-            if (accessToken.ExpiresAtTime.AddMinutes(-10) <= DateTime.Now)
+            if (AccessTokenIsInvalidOrExpired(accessToken))
             {
                 accessToken = await Authenticate();
             }
@@ -52,6 +52,11 @@ namespace PetfinderAPIWrapper.API.Auth
             await client.SignalEntityAsync<IAuthStateEntity>(entityId, proxy => proxy.Set(accessToken));
 
             return accessToken;
+        }
+
+        private static bool AccessTokenIsInvalidOrExpired(AccessTokenWrapper accessToken)
+        {
+            return accessToken.ExpiresAtTime == null || accessToken.ExpiresAtTime.AddMinutes(-10) <= DateTime.Now;
         }
 
         private async Task<AccessTokenWrapper> Authenticate()
