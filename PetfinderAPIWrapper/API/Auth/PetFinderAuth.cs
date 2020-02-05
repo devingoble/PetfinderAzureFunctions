@@ -56,7 +56,7 @@ namespace PetfinderAPIWrapper.API.Auth
 
         private static bool AccessTokenIsInvalidOrExpired(AccessTokenWrapper accessToken)
         {
-            return accessToken.ExpiresAtTime == null || accessToken.ExpiresAtTime.AddMinutes(-10) <= DateTime.Now;
+            return accessToken.ExpiresAtTime == null ? accessToken.ExpiresAtTime.AddMinutes(-10) <= DateTime.Now : true;
         }
 
         private async Task<AccessTokenWrapper> Authenticate()
