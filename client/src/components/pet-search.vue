@@ -3,16 +3,16 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
-import { AnimalType } from '@/data/animal-types';
-import AnimalData from '@/data/animal-data';
+import { Component, Prop, Vue } from "vue-property-decorator";
+import { AnimalType } from "@/data/animal-types";
+import AnimalData from "@/data/animal-data";
 
-@Component( { name: 'pet-search'})
+@Component({ name: "pet-search" })
 export default class PetSearch extends Vue {
   private animalTypes: AnimalType[] = [];
   private animalData = new AnimalData();
 
-  async created(){
+  async created() {
     await this.loadAnimalTypes();
   }
 
