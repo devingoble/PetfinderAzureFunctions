@@ -2,6 +2,7 @@ import axios from "axios";
 import API from "./config";
 import { AnimalTypes } from "./animal-types";
 import SearchParameters from "./search-parameters";
+import SearchResult from "./search-result-types";
 
 export default class AnimalData {
   public async getFilterData() {
@@ -20,6 +21,6 @@ export default class AnimalData {
 
     let animals = await axios.get(`${API}/animals?${query.toString()}`);
 
-    return animals.data;
+    return animals.data as SearchResult;
   }
 }

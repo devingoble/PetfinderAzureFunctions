@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div>Hello Pets!</div>
+  <div class="ma-2 ma-md-12">
+    <PetGrid v-if="animalData" :animals="animalData.animals" />
   </div>
 </template>
 
@@ -9,17 +9,19 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import { AnimalType } from "@/data/animal-types";
 import SearchParameters from "@/data/search-parameters";
 import AnimalData from "@/data/animal-data";
+import SearchResult from "../data/search-result-types";
+import PetGrid from '@/components/pet-grid.vue';
 
-@Component
+@Component({ components: { PetGrid }})
 export default class Pets extends Vue {
   searchParameters: SearchParameters = new SearchParameters();
-  animalData: AnimalData = new AnimalData();
-  critterData: any = {};
+  animalDataService: AnimalData = new AnimalData();
+  animalData: SearchResult | null = null;
   async created() {
     this.searchParameters.organization =
       (this.$route.query.organization as string) ?? "";
 
-    this.critterData = await this.animalData.getSearchedAnimals(
+    this.animalData = await this.animalDataService.getSearchedAnimals(
       this.searchParameters
     );
   }
