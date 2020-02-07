@@ -14,12 +14,14 @@ import AnimalData from "@/data/animal-data";
 export default class Pets extends Vue {
   searchParameters: SearchParameters = new SearchParameters();
   animalData: AnimalData = new AnimalData();
-  data: any;
+  critterData: any = {};
   async created() {
     this.searchParameters.organization =
       (this.$route.query.organization as string) ?? "";
 
-    this.data = await this.animalData.getSearchedAnimals(this.searchParameters);
+    this.critterData = await this.animalData.getSearchedAnimals(
+      this.searchParameters
+    );
   }
 }
 </script>

@@ -20,6 +20,6 @@ export default class AnimalData {
 
     let animals = await axios.get(`${API}/animals?${query.toString()}`);
 
-    return animals;
+    return animals.data;
   }
 }
