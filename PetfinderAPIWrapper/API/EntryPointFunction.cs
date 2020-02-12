@@ -34,7 +34,7 @@ namespace PetfinderAPIWrapper.API
 
         [FunctionName("pets")]
         public async Task<IActionResult> HttpStart(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "{passthroughRoute}")]HttpRequestMessage req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "{**passthroughRoute}")]HttpRequestMessage req,
             [DurableClient] IDurableEntityClient client,
             string passthroughRoute)
         {
