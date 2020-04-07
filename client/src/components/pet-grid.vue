@@ -5,7 +5,7 @@
         <v-card
           class="pa-2 ma-2 flex-grow-1 flex-md-grow-0"
           height="460px"
-          max-width="300px"
+          width="300px"
           :elevation="hover ? 24 : 6"
           @click.stop="showDetail(animal)"
         >
@@ -13,8 +13,8 @@
         </v-card>
       </template>
     </v-hover>
-    <v-dialog v-model="dialog" width="600px">
-      <PetDetail :animal="selectedAnimal" :is-compact="false" />
+    <v-dialog v-model="dialog" max-width="600px">
+      <PetDetail :animal="selectedAnimal" :is-compact="false" class="pa-2" />
     </v-dialog>
   </div>
 </template>

@@ -1,44 +1,66 @@
 <template v-slot="{ hover }">
-  <div class="white">
-    <v-img height="300px" position="top" :lazy-src="getLazyPhoto" :src="getPhoto"></v-img>
-    <v-card-title>{{ animal.name }}</v-card-title>
-    <v-card-text>
-      <v-tooltip top>
-        <template v-slot:activator="{ on }">
-          <div v-on="on" class="text-truncate">{{ buildBreeds }}</div>
-        </template>
-        <span>{{ buildBreeds }}</span>
-      </v-tooltip>
-      <div>{{ getDescription }}</div>
-      <div v-if="animal.gender !== 'Unknown'">{{ getSpayNeuter }}</div>
-      <div v-if="!isCompact">{{ animal.description }}</div>
-    </v-card-text>
+  <div class="white justified">
+      <v-img
+        v-if="isCompact"
+        position="top"
+        :lazy-src="getLazyPhoto"
+        :src="getPhoto"
+        max-height="300px"
+        min-height="300px"
+      ></v-img>
+      <PhotoGallery v-else :photos="animal.photos" />
+    <div>
+      <v-card-title>{{ animal.name }}</v-card-title>
+      <v-card-text>
+        <v-tooltip top>
+          <template v-slot:activator="{ on }">
+            <div v-on="on" class="text-truncate">{{ buildBreeds }}</div>
+          </template>
+          <span>{{ buildBreeds }}</span>
+        </v-tooltip>
+        <div>{{ getDescription }}</div>
+        <div v-if="animal.gender !== 'Unknown'">{{ getSpayNeuter }}</div>
+      </v-card-text>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Watch, Vue } from "vue-property-decorator";
 import { Animal } from "@/data/search-result-types";
+import AnimalData from "@/data/animal-data";
+import PhotoGallery from "@/components/photo-gallery.vue";
 
-@Component
+@Component({components: { PhotoGallery}})
 export default class PetDetail extends Vue {
   @Prop()
   animal?: Animal;
   @Prop()
   isCompact?: boolean;
+  localAnimal?: Animal;
+
+  // @Watch('animal')
+  // async animalChanged(newValue: string) {
+  //   if(!this.animal) return;
+  //   this.localAnimal = Object.assign({}, this.animal);
+  //   // if(this.isCompact) return;
+
+  //   // let animalData = new AnimalData();
+  //   // this.localAnimal = await animalData.getAnimal(this.animal.id)
+  // }
 
   get getPhoto() {
     if (!this.animal) return this.getLazyPhoto();
 
     if (this.animal.photos.length > 0) {
-      if(this.isCompact === undefined){
-        return this.animal.photos[0]['medium'];
+      if (this.isCompact === undefined) {
+        return this.animal.photos[0]["medium"];
       }
 
       if (this.isCompact === true) {
-        return this.animal.photos[0]['medium'];
+        return this.animal.photos[0]["medium"];
       } else {
-        return this.animal.photos[0]['large'];
+        return this.animal.photos[0]["large"];
       }
     }
 
@@ -98,3 +120,12 @@ export default class PetDetail extends Vue {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.justified {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+</style>
