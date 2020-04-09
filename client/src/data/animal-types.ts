@@ -22,5 +22,5 @@ export interface Breeds {
 export enum Gender {
   Female = "Female",
   Male = "Male",
-  Unknown = "Unknown"
+  Unknown = "Unknown",
 }
