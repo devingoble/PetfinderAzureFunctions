@@ -57,7 +57,6 @@ export default class PhotoGallery extends Vue {
 
   get getPhoto() {
     if (this.photos && this.photos.length > 0) {
-      console.log(this.photos);
       return this.photos[this.currentPhotoIndex]["large"];
     }
 
