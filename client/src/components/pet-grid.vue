@@ -13,7 +13,11 @@
         </v-card>
       </template>
     </v-hover>
-    <v-dialog v-model="dialog" max-width="600px">
+    <v-dialog
+      v-model="dialog"
+      max-width="600px"
+      :fullscreen="$vuetify.breakpoint.xsOnly"
+    >
       <PetDetail :animal="selectedAnimal" :is-compact="false" class="pa-2" />
     </v-dialog>
   </div>

@@ -1,14 +1,14 @@
 <template v-slot="{ hover }">
   <div class="white justified">
-      <v-img
-        v-if="isCompact"
-        position="top"
-        :lazy-src="getLazyPhoto"
-        :src="getPhoto"
-        max-height="300px"
-        min-height="300px"
-      ></v-img>
-      <PhotoGallery v-else :photos="animal.photos" />
+    <v-img
+      v-if="isCompact"
+      position="top"
+      :lazy-src="getLazyPhoto"
+      :src="getPhoto"
+      max-height="300px"
+      min-height="300px"
+    ></v-img>
+    <PhotoGallery v-else :photos="animal.photos" />
     <div>
       <v-card-title>{{ animal.name }}</v-card-title>
       <v-card-text>
@@ -31,23 +31,13 @@ import { Animal } from "@/data/search-result-types";
 import AnimalData from "@/data/animal-data";
 import PhotoGallery from "@/components/photo-gallery.vue";
 
-@Component({components: { PhotoGallery}})
+@Component({ components: { PhotoGallery } })
 export default class PetDetail extends Vue {
   @Prop()
   animal?: Animal;
   @Prop()
   isCompact?: boolean;
   localAnimal?: Animal;
-
-  // @Watch('animal')
-  // async animalChanged(newValue: string) {
-  //   if(!this.animal) return;
-  //   this.localAnimal = Object.assign({}, this.animal);
-  //   // if(this.isCompact) return;
-
-  //   // let animalData = new AnimalData();
-  //   // this.localAnimal = await animalData.getAnimal(this.animal.id)
-  // }
 
   get getPhoto() {
     if (!this.animal) return this.getLazyPhoto();

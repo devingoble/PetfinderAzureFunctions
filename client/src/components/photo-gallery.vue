@@ -26,7 +26,13 @@
             class="space-thumbnails"
             @click="toggle"
           >
-            <v-img :key="index" :src="photo['small']" class="align-stretch" height="100px" width="100px"></v-img>
+            <v-img
+              :key="index"
+              :src="photo['small']"
+              class="align-stretch"
+              height="100px"
+              width="100px"
+            ></v-img>
           </v-card>
         </v-slide-item>
       </v-slide-group>
@@ -35,7 +41,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { Photo } from "@/data/search-result-types";
 
 @Component
@@ -44,8 +50,14 @@ export default class PhotoGallery extends Vue {
   photos?: Photo[];
   currentPhotoIndex: number = 0;
 
+  @Watch("photos")
+  onPhotosUpdate(value: Photo[], oldValue: Photo[]) {
+    this.currentPhotoIndex = 0;
+  }
+
   get getPhoto() {
-    if (this.photos && this.photos.length >= 1) {
+    if (this.photos && this.photos.length > 0) {
+      console.log(this.photos);
       return this.photos[this.currentPhotoIndex]["large"];
     }
 

@@ -22,7 +22,9 @@ export default class AnimalData {
       }
     }
 
-    let animals = await axios.get(`${API}/animals?${query.toString()}`);
+    let animals = await axios.get(
+      `${API}/animals?${query.toString()}/&limit=100`
+    );
 
     return animals.data as SearchResult;
   }
