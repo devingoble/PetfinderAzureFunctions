@@ -1,5 +1,5 @@
 import axios from "axios";
-import API from "./config";
+import { API } from "./config";
 import { AnimalTypes } from "./animal-types";
 import SearchResult, { Animal } from "./search-result-types";
 
@@ -22,9 +22,7 @@ export default class AnimalData {
       }
     }
 
-    let animals = await axios.get(
-      `${API}/animals?${query.toString()}/&limit=100`
-    );
+    let animals = await axios.get(`${API}/animals?${query.toString()}`);
 
     return animals.data as SearchResult;
   }

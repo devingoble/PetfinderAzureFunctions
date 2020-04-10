@@ -1,5 +1,8 @@
 <template>
   <div class="d-flex flex-wrap justify-center">
+    <div v-if="animals.length === 0">
+      <p class="display-3">None currently available</p>
+    </div>
     <v-hover v-for="animal in animals" :key="animal.id">
       <template v-slot="{ hover }">
         <v-card
@@ -18,7 +21,18 @@
       max-width="600px"
       :fullscreen="$vuetify.breakpoint.xsOnly"
     >
-      <PetDetail :animal="selectedAnimal" :is-compact="false" class="pa-2" />
+      <v-card>
+        <v-toolbar dark color="primary" v-if="$vuetify.breakpoint.xsOnly">
+          <v-btn icon dark @click="dialog = false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </v-toolbar>
+        <PetDetail :animal="selectedAnimal" :is-compact="false" class="pa-2" />
+        <v-card-actions v-if="$vuetify.breakpoint.smAndUp">
+          <v-spacer />
+          <v-btn color="primary" @click="dialog = false">Close</v-btn>
+        </v-card-actions>
+      </v-card>
     </v-dialog>
   </div>
 </template>

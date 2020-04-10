@@ -1,5 +1,5 @@
 <template v-slot="{ hover }">
-  <div class="white justified">
+  <div class="white">
     <v-img
       v-if="isCompact"
       position="top"
@@ -20,6 +20,11 @@
         </v-tooltip>
         <div>{{ getDescription }}</div>
         <div v-if="animal.gender !== 'Unknown'">{{ getSpayNeuter }}</div>
+        <div v-if="!isCompact">
+          <a :href="`${PETFINDER}/${animal.id}`" target="_blank"
+            >Get more information on PetFinder</a
+          ><v-icon>mdi-open-in-new</v-icon>
+        </div>
       </v-card-text>
     </div>
   </div>
@@ -30,6 +35,7 @@ import { Component, Prop, Watch, Vue } from "vue-property-decorator";
 import { Animal } from "@/data/search-result-types";
 import AnimalData from "@/data/animal-data";
 import PhotoGallery from "@/components/photo-gallery.vue";
+import { PETFINDER } from "@/data/config";
 
 @Component({ components: { PhotoGallery } })
 export default class PetDetail extends Vue {
