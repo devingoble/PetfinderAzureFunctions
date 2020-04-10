@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using Microsoft.Azure.WebJobs.Extensions.Http;
+using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using PetfinderAPIWrapper.API.Auth;
@@ -18,6 +19,7 @@ namespace PetfinderAPIWrapper.API
         private readonly IPetfinderAuth _petfinderAuth;
         private readonly ApiOptions _options;
         private readonly HttpClient _httpClient;
+        private readonly HttpClient _httpClientApiWrapper;
         private readonly ILogger<EntryPointFunction> _logger;
 
         public EntryPointFunction(IHttpClientFactory httpClientFactory, IPetfinderAuth petFinderAuth, IOptions<ApiOptions> options, ILogger<EntryPointFunction> log)
@@ -25,6 +27,7 @@ namespace PetfinderAPIWrapper.API
             _petfinderAuth = petFinderAuth;
             _options = options.Value;
             _httpClient = httpClientFactory.CreateClient("petfinderapi");
+            _httpClientApiWrapper = httpClientFactory.CreateClient("wrapperapi");
             _logger = log;
         }
 
@@ -62,6 +65,23 @@ namespace PetfinderAPIWrapper.API
             var code = pfDataMessage.StatusCode == HttpStatusCode.NotFound ? HttpStatusCode.NotFound : HttpStatusCode.InternalServerError;
 
             return new StatusCodeResult((int)code);
+        }
+
+        [FunctionName("KeepAlive")]
+        public async Task TimerStart([TimerTrigger("0 */15 * * * *")]TimerInfo timer)
+        {
+            _logger.LogDebug("Warmup trigger called");
+
+            var response = await _httpClientApiWrapper.GetAsync("/");
+
+            if (response.IsSuccessStatusCode)
+            {
+                _logger.LogDebug("Warmup successful");
+            }
+            else
+            {
+                _logger.LogError($"Could not warm up API wrapper: {response.StatusCode} - {response.ReasonPhrase}");
+            }
         }
     }
 }

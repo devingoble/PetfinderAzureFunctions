@@ -38,6 +38,13 @@ namespace PetfinderAPIWrapper
                 client.BaseAddress = new Uri(Environment.GetEnvironmentVariable("PetFinderAPIBaseUrl") ?? "");
             });
 
+            builder.Services.AddHttpClient("wrapperapi", client =>
+            {
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                client.BaseAddress = new Uri(Environment.GetEnvironmentVariable("WrapperAPIUrl") ?? "");
+            });
+
             builder.Services.AddTransient<IPetfinderAuth, PetfinderAuth>();
         }
     }
